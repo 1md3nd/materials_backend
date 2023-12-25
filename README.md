@@ -1,10 +1,13 @@
 # Material API
 ### The Material API provides endpoints for managing materials. It allows users to retrieve information about materials, search for specific materials, and more.
 ---
-### You can access the APIs at http://34.125.107.238:8080/ 
+### You can access the APIs at:  http://34.125.107.238:8080/ 
 ## NOTE: use only HTTP to make requests HTTPS will not work.
 
+### Doumentation: https://documenter.getpostman.com/view/10263366/2s9Ykt3dv7
 
+---
+---
 ## Endpoints
 ### Get All Materials
 #### Endpoint:

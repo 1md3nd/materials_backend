@@ -209,10 +209,20 @@ def search_text_(request):
     try:
         collection = MongoConnection.get_connection().get_database('materials').get_collection('all_materials')
         sub_string = request.GET.get('string')
-        search_query = {'$text':{'$search':sub_string}}
-        materials = collection.find(search_query)
-        df = pd.DataFrame(list(materials))
+        search_query = lambda field: {field: {'$regex': f'.*{sub_string}.*', '$options': 'i'}}
 
+        fields = collection.find_one()
+        search_queries = []
+
+        for field_k,field_v in fields.items():
+            if isinstance(field_v, str):
+                print(search_query(field_k))
+                search_queries.append(search_query(field_k))
+        print(search_queries)
+        materials = collection.find({'$or':search_queries})
+        
+        df = pd.DataFrame(list(materials))
+        print(df)
         count = df.shape[0]
         if  count == 0:
             return Response({'status':'No data found.','data': list(df.columns)},status=status.HTTP_204_NO_CONTENT)

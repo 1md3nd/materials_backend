@@ -5,7 +5,7 @@ from bson.json_util import dumps
 from .mongo_client_local import MongoConnection
 from pymongo.errors import PyMongoError
 import pandas as pd
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import requires_csrf_token
 import json
 
 def stream_data(collection):
@@ -30,7 +30,7 @@ def add_data(collection, data):
     except PyMongoError as e:
         return Response({'error': f'Error inserting data: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@csrf_exempt
+@requires_csrf_token
 @api_view(['GET', 'POST'])
 def all_materials(request):
     collection = MongoConnection.get_connection().get_database('materials').get_collection('all_materials')
@@ -39,15 +39,13 @@ def all_materials(request):
     elif request.method == 'POST':
         try:
             data = request.data
-            print(data)
-            # Call the add_data function to insert the data
+            add_data(collection,data)
             
         except PyMongoError as e:
             return Response({'error': f'Error retrieving data: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET'])
 def search_materials_by_formula(request):
     collection = MongoConnection.get_connection().get_database('materials').get_collection('all_materials')
@@ -97,7 +95,6 @@ def search_materials_by_formula(request):
         count = df.shape[0]
         if  count == 0:
             return Response({'status':'No data found.','data': list(df.columns)},status=status.HTTP_204_NO_CONTENT)
-        print(df)
         df['_id'] = df['_id'].astype(str)
         df = df.fillna('')
         df = df.T
@@ -138,7 +135,6 @@ def compare_fields_by(request,):
     
         search_query = {search_comp:int(field_value)}
         query[select_field] = search_query
-        print(query)
         materials = collection.find(query)
         df = pd.DataFrame(list(materials))
 
@@ -158,7 +154,6 @@ def compare_fields_by(request,):
 def boolen_filter_(request,field,value):
     try:
         collection = MongoConnection.get_connection().get_database('materials').get_collection('all_materials')
-        print(field,value)
         value = value.lower()
         if value in ('true',1):
             query_com = '$exists'
@@ -222,7 +217,6 @@ def search_text_(request):
         materials = collection.find({'$or':search_queries})
         
         df = pd.DataFrame(list(materials))
-        print(df)
         count = df.shape[0]
         if  count == 0:
             return Response({'status':'No data found.','data': list(df.columns)},status=status.HTTP_204_NO_CONTENT)

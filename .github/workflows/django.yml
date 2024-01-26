@@ -10,16 +10,21 @@ jobs:
     steps:
       - name: Get the version
         id: get_version
-        run: echo "::set-output name=VERSION::${GITHUB_REF/refs/\tags\//}"
+        run: echo "::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}"
+
       - name: Debug version
         id: debug
         run: echo ${{ steps.get_version.outputs.VERSION }}
-      - uses: actions/checkout@v1
-      - name: executing remote ssh commands using ssh key
+
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Execute remote SSH commands using SSH key
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.GCP_IP}}
           username: arcreator07
           key: ${{secrets.GCP_PRIVATE_KEY}}
           port: 22
-          script: /bin/sh deploy.sh ${{steps.get_version.outputs.VERSION}}
+          script: |
+            /bin/sh deploy.sh ${{ steps.get_version.outputs.VERSION }}

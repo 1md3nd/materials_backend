@@ -28,5 +28,8 @@ jobs:
           username: arcreator07
           key: ${{secrets.GCP_PRIVATE_KEY}}
           port: 22
+          run: |
+            pwd
+            ls -al
           script: | 
-            /bin/sh deploy.sh ${{ steps.get_version.outputs.VERSION }}
+            /bin/sh ./deploy.sh ${{ steps.get_version.outputs.VERSION }}

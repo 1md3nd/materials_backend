@@ -21,15 +21,8 @@ jobs:
       - name: Check directory
         run: |
             ls
-      - name: Execute remote SSH commands using SSH key
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{secrets.GCP_IP}}
-          username: arcreator07
-          key: ${{secrets.GCP_PRIVATE_KEY}}
-          port: 22
-          run: |
-            pwd
-            ls -al
-          script: | 
-            /bin/sh ./deploy.sh ${{ steps.get_version.outputs.VERSION }}
+      - name: Copy files to remote server using SCP
+        run: scp -i ${{secrets.GCP_PRIVATE_KEY}} -P 22 -r ./deploy.sh arcreator07@${{secrets.GCP_IP}}:/deploy.sh
+
+      - name: Run deploy.sh on remote server
+        run: ssh -i ${{secrets.GCP_PRIVATE_KEY}} -p 22 arcreator07@${{secrets.GCP_IP}} "chmod +x deploy.sh && ./deploy.sh ${{ steps.get_version.outputs.VERSION }}"

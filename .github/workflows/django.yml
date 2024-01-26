@@ -17,7 +17,7 @@ jobs:
         run: echo ${{ steps.get_version.outputs.VERSION }}
 
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Check directory
         run: |
             ls

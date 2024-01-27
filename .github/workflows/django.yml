@@ -28,4 +28,4 @@ jobs:
           key: ${{secrets.GCP_PRIVATE_KEY}}
           port: 22
           script: |
-            cd deploy && /bin/sh deploy.sh ${{ steps.get_version.outputs.VERSION }}
+            cd deploy && cd deploy && /bin/sh deploy.sh ${{ steps.get_version.outputs.VERSION }}

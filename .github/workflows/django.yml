@@ -18,14 +18,7 @@ jobs:
 
       - uses: actions/checkout@v4
       - name: copy file via ssh password
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{secrets.GCP_IP}}
-          username: arcreator07
-          port: 22
-          key: ${{secrets.GCP_PRIVATE_KEY}}
-          source: "deploy.sh"
-          target: ""
+        run: scp -i ${{secrets.GCP_PRIVATE_KEY}} deploy.sh arceator07@${{secrets.GCP_IP}}:/deploy
 
       - name: Execute remote SSH commands using SSH key
         uses: appleboy/ssh-action@master
@@ -35,4 +28,4 @@ jobs:
           key: ${{secrets.GCP_PRIVATE_KEY}}
           port: 22
           script: |
-            /bin/sh deploy.sh ${{ steps.get_version.outputs.VERSION }}
+            cd deploy && /bin/sh deploy.sh ${{ steps.get_version.outputs.VERSION }}

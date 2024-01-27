@@ -24,8 +24,9 @@ jobs:
           username: arcreator07
           port: 22
           key: ${{secrets.GCP_PRIVATE_KEY}}
-          source: "deploy.sh"
-          target: "/"
+          run: ls -la
+          source: 'deploy.sh'
+          target: '/'
 
       - name: Execute remote SSH commands using SSH key
         uses: appleboy/ssh-action@master

@@ -16,8 +16,8 @@ jobs:
         id: debug
         run: echo ${{ steps.get_version.outputs.VERSION }}
 
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v1
 
       - name: Execute remote SSH commands using SSH key
         uses: appleboy/ssh-action@master
@@ -26,8 +26,5 @@ jobs:
           username: arcreator07
           key: ${{secrets.GCP_PRIVATE_KEY}}
           port: 22
-           run: |
-            pwd
-            ls -al
           script: |
             /bin/sh deploy.sh ${{ steps.get_version.outputs.VERSION }}

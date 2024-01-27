@@ -25,7 +25,7 @@ jobs:
           port: 22
           key: ${{secrets.GCP_PRIVATE_KEY}}
           source: "deploy.sh"
-          target: ""
+          target: "/"
 
       - name: Execute remote SSH commands using SSH key
         uses: appleboy/ssh-action@master
@@ -35,4 +35,4 @@ jobs:
           key: ${{secrets.GCP_PRIVATE_KEY}}
           port: 22
           script: |
-            /bin/sh deploy.sh ${{ steps.get_version.outputs.VERSION }}
+            cd deploy && /bin/sh deploy.sh ${{ steps.get_version.outputs.VERSION }}

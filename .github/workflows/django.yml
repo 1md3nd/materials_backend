@@ -22,7 +22,7 @@ jobs:
         run: |
             ls
       - name: Copy files to remote server using SCP
-        run: scp -i ${{secrets.GCP_PRIVATE_KEY}} -P 22 -r deploy.sh arcreator07@${{secrets.GCP_IP}}:/deploy
+        run: scp -i ${{secrets.GCP_PRIVATE_KEY}} -P 22 -r deploy.sh arcreator07@${{secrets.GCP_IP}}:/
 
       - name: Run deploy.sh on remote server
         run: ssh -i ${{secrets.GCP_PRIVATE_KEY}} -p 22 arcreator07@${{secrets.GCP_IP}} "cd deploy && /bin/sh ./deploy.sh ${{ steps.get_version.outputs.VERSION }}"
